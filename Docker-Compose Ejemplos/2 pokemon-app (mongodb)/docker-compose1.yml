@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  db:
+    container_name: pokemon_db
+    image: mongo:6.0
+    volumes: 
+      - poke-vol:/data/db
+    ports:            # Vamos a declarar un momento los puertos para prueba. Pero el 
+      - 27017:27017   # profesor no kiere que se pueda acceder a las bases de datos desde otro lado
+                      # que no sea mongo-express
+    restart: always   # Es util cuando estamos trabajando en aplicaciones de docker compose y por alguna razon
+                      # una se cae lo que hace es volver a levantarse de nuevo.
+
+volumes:
+  poke-vol:
+    external: false

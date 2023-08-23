@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+  db:  #Este es el nombre del servicio
+    container_name: postgres_database   #Este es el nombre del contenedor
+    image: postgres
+    volumes:
+      # - postgres-db:/var/lib/postgresql/data #De esta forma usamos los volumenes
+      - ./postgres:/var/lib/postgresql/data #De esta forma toda la informacion de la base de datos la guardamos en la carpeta postgres en nuestro directorio que se crea al levantar el docker compose.
+          #Logicamente para usar esto se comenta los volumenes.
+    environment:
+      - POSTGRES_PASSWORD=123456
+
+  pgAdmin:          #Este es el nombre del servicio
+    depends_on:
+      - db        #Nombre del servicio
+    image: dpage/pgadmin4
+    ports:
+      - "8080:80"
+    environment:
+      - PGADMIN_DEFAULT_PASSWORD=123456
+      - PGADMIN_DEFAULT_EMAIL=superman@google.com
+    volumes:
+      - ./pgadmin4:/var/lib/pgadmin #Le agregamos un bind volume a pgadmin
+# Nota del pgadmin: Cuando pide el hostname ponemos siempre el nombre del contenedor de la base de datos.
+
+# Necesitamos agregar esta parte cuando trabajamos con volumes porque de no hacerlo da error.
+# volumes: 
+#   postgres-db: # si lo dejamos asi lo que hace es crear el volume.
+#     external: true #de esta forma usamos el volume que ya existe.
+      
+#Hay algunos cambios que podemos hacer sin tener que bajar el docker compose pero el cambio de volumenes si se
+#necesita bajar el docker compose y limpiarlo

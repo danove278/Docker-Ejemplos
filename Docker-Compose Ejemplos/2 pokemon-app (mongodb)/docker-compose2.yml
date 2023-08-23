@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  db:
+    container_name: ${MONGO_DB_NAME}
+    image: mongo:6.0
+    volumes: 
+      - poke-vol:/data/db
+    ports:            # Vamos a declarar un momento los puertos para prueba. Pero el 
+      - 27017:27017   # profesor no kiere que se pueda acceder a las bases de datos desde otro lado
+                      # que no sea mongo-express
+    restart: always   # Es util cuando estamos trabajando en aplicaciones de docker compose y por alguna razon
+                      # una se cae lo que hace es volver a levantarse de nuevo.
+    # Vamos a declarar las variables de entorno para obligar que ocupemos una autenticacion 
+    # para hacer consultas a la base de datos. Todo esto lo dice la documentacion oficial de mongo en 
+    # la imagen de docker.
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+    
+    # Para forzar la autenticacion tenemos que ejecutar el comando '--auth' tenemos varias opciones.
+    # 1 -> Podemos una vez que inicia el contenedor entrar al cli del contenedor como 'docker --exec -it mongo /bin/bash' 
+    #     o mejor aun tenemos el sgt comando que haria justamente eso por nosotros.
+    command: ['--auth'] #Le indicamos que use este comando cuando se ejecuta el container. Este comando
+    # es necesario para la autenticacion con las variables de entorno de username y password.
+
+volumes:
+  poke-vol:
+    external: false
