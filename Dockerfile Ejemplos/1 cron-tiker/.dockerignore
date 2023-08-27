@@ -1,0 +1,7 @@
+node_modules/
+Dockerfile
+
+# Muy parecido a git
+.git
+.gitignore
+.dockerignore

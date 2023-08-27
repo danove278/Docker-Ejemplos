@@ -1,0 +1,57 @@
+# Por cierto el nombre del archivo no es valido. Lo puse asi para poder ponerlo en el mismo
+# directorio todos.
+
+# Primera etapa
+# Dependencias de Desarrollo (Aqui deescarga tanto las dependencias de desarrollo como de tests)
+FROM node:19.2-alpine3.16 as dependencias
+# Usualmente se usa /app para el directorio de trabajo
+# Es como hacer un cd /app osea que nos movemos a ese directorio 
+WORKDIR /app 
+# Vamos a copiar el archivo app.js y el archivo package.json al directorio /app dentro del contenedor 
+COPY app.js package.json ./
+# Usamos este comando para reconstruir los modulos de NODE (esto es propio de NODE)
+# RUN es para ejecutar comandos  
+RUN npm install
+# Comando que se ejecuta cuando se hace el run de la aplicacion
+# Exactamente lo que hace este comando es ejecutar la aplicacion
+CMD ["node", "app.js"]
+
+
+# Para construir la imagen:
+# En el cmd vamos a donde se encuentra el dockerfile que debe estar en la
+# carpeta de nuestro proyecto y:
+# docker build --tag cron-ticker .
+                # --tag -> le ponemos un nombre a la imagen
+                # . -> el punto significa que el dockerfile se encuentra donde
+                #       nos encontramos en el cmd (el path relativo)
+# Al ejecutarlo nos damos cuenta que solo ejecuta los 4 primeros pasos.
+# Esto pasa porque el quinto paso el CMD se ejecuta cuando montamos la imagen
+# en un contenedor 
+
+
+# Nota importante:
+# Una buena practica es poner los labels (pasos) que menos cambian lo mas arriba
+# posible. Esto se recomienda porque cuando un label cambia todos los labels que le
+# siguen se vuelven a crear.
+# Nos damos cuenta que cuando los labels no han cambiado como los tiene almacenados
+# en cache no los vuelve a crear los reutiliza.
+
+# Muchas veces vamos a tener que recontruir una imagen. Una de las mayores razones
+# es que tuvimos que hacer cambios en nuestro codigo. O hicimos un cambio en el dockerfile.
+
+
+# Nota importante:
+# La creacion de las imagenes se pueden optimizar mejor. Volver a ver el curso en el cap
+# "Reconstruir una imagen" para entenderlo bien. Esta muy bueno. 
+
+<!-- En la construccion de la imagen: -->
+# docker build --tag cron-ticker .
+<!-- Al no ponerle una etiqueta(esta etiqueta en realidad es el tag) esta va a ser el nuevo latest.
+Si le damos a: "docker image ls" vamos a ver que esta ocurriendo con las imagenes
+que hemos ido creando.  -->
+# docker build --tag cron-ticker:1.0.0 .  -> lo creamos con un tag
+<!-- Renombrar una imagen:
+docker image tag cron-ticker:1.0.0 cron-ticker:buffalo 
+Y vamos a tener la 1.0.0 y buffalo
+Una cosa a tener en cuenta cuando creamos el latest, tenemos que renombrar a una version tambien.
+Porque cuando hagamos otro cambio y creemos otro latest ese se pierde. Asi siempre se queda guardado.  -->

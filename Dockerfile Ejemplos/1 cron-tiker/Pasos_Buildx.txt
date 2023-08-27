@@ -1,0 +1,17 @@
+1->docker buildx ls -> listamos los build que tenemos.
+
+Creamos un nuevo builder con unos drivers nuevos con los que podemos generar nuevas plataformas
+2->docker buildx create --name mybuilder --driver docker-container --bootstrap
+
+3->docker buildx use mybuilder -> cambiamos a el nuevo builder
+
+4->docker buildx inspect -> inspeccionamos el builder
+
+Inspeccionar la imagen multiplataforma
+5-> docker buildx imagetools inspect <username>/<image>:latest
+
+Nota:
+The image is now available on Docker Hub with the tag <username>/<image>:latest. 
+You can use this image to run a container on Intel laptops, Amazon EC2 Graviton instances, Raspberry Pis, and on other architectures. 
+Docker pulls the correct image for the current architecture, so Raspberry PIs run the 32-bit Arm version and EC2 Graviton instances run 64-bit Arm.
+
